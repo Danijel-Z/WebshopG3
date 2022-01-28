@@ -3,7 +3,7 @@ from models import db, seedData
 from flask_migrate import Migrate, upgrade
 from areas.site.sitePages import siteBluePrint
 from areas.products.productPages import productBluePrint
-
+from flask_user import user_manager, current_user
 
 app = Flask(__name__)
 app.config.from_object('config.ConfigDebug')

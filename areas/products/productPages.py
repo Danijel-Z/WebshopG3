@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from .services import getCategory, getTrendingCategories, getProduct
+from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts
 
 
 
@@ -12,7 +12,10 @@ productBluePrint = Blueprint('product', __name__)
 def index() -> str:
     trendingCategories = []
     trendingCategories = getTrendingCategories()
-    return render_template('products/index.html',trendingCategories=trendingCategories)
+    trendingProducts = getTrendingProducts()
+    return render_template('products/index.html',trendingCategories=trendingCategories,
+        products=trendingProducts
+    )
 
 
 @productBluePrint.route('/category/<id>')
