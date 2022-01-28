@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from areas.products.services import getCategory, getTrendingCategories, getProduct
+from .services import getCategory, getTrendingCategories, getProduct
 
 
 
