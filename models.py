@@ -5,7 +5,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-
+#testar lägga in kommentar
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
