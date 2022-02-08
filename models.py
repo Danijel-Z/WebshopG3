@@ -5,7 +5,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 #hejsan
-
+#hej hej
 #testar lägga in kommentar
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
