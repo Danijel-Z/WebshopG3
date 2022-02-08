@@ -1,2 +1,8 @@
 /env
 /__pycache__
+areas/products/__pycache__/__init__.cpython-39.pyc
+areas/products/__pycache__/productPages.cpython-39.pyc
+areas/products/__pycache__/services.cpython-39.pyc
+areas/site/__pycache__/sitePages.cpython-39.pyc
+migrations/__pycache__/env.cpython-39.pyc
+migrations/versions/__pycache__/aad056c21b18_initial.cpython-39.pyc

@@ -38,7 +38,6 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
-user_manager = UserManager(None, db, User) 
 
 
 class Category(db.Model):
@@ -60,6 +59,8 @@ class Product(db.Model):
     UnitsOnOrder = db.Column(db.Integer, unique=False, nullable=False)
     ReorderLevel = db.Column(db.Integer, unique=False, nullable=False)
     Discontinued = db.Column(db.Boolean, unique=False, nullable=False)
+
+user_manager = UserManager(None, db, User)  
 
 
 def AddLoginIfNotExists(email:str, passwd:str, roles:list[str]):
