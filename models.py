@@ -4,6 +4,7 @@ from flask_user import  UserMixin, UserManager
 from datetime import datetime
 
 db = SQLAlchemy()
+#hejsan
 
 #testar lägga in kommentar
 class User(db.Model, UserMixin):
