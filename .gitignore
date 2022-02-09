@@ -12,3 +12,10 @@ areas/products/__pycache__/services.cpython-310.pyc
 areas/site/__pycache__/sitePages.cpython-310.pyc
 migrations/__pycache__/env.cpython-310.pyc
 migrations/versions/__pycache__/aad056c21b18_initial.cpython-310.pyc
+areas/products/__pycache__/__init__.cpython-310.pyc
+areas/products/__pycache__/productPages.cpython-310.pyc
+areas/products/__pycache__/services.cpython-310.pyc
+areas/site/__pycache__/forms.cpython-310.pyc
+areas/site/__pycache__/sitePages.cpython-310.pyc
+migrations/__pycache__/env.cpython-310.pyc
+migrations/versions/__pycache__/aad056c21b18_initial.cpython-310.pyc
