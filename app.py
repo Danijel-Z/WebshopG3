@@ -4,9 +4,15 @@ from flask_migrate import Migrate, upgrade
 from areas.site.sitePages import siteBluePrint
 from areas.products.productPages import productBluePrint
 from flask_user import login_required, roles_required
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 app.config.from_object('config.ConfigDebug')
+
+
+
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 db.app = app
 db.init_app(app)
