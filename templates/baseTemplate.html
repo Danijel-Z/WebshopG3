@@ -153,7 +153,10 @@
             <div id="responsive-nav">
                 <!-- NAV -->
                 <ul class="main-nav nav navbar-nav">
-                    @*@Html.Partial("_TopNav", ViewBag.TopMenuViewModel as StefanShopWeb.ViewModels.TopMenuViewModel)*@
+                    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+                        message in messages %}
+                        <span>{{message}}</span>
+                        {% endfor %} {% endif %} {% endwith %}
                 </ul>
                 <!-- /NAV -->
             </div>
@@ -182,10 +185,18 @@
                 <div class="col-md-12">
                     <div class="newsletter">
                         <p>Sign Up for the <strong>NEWSLETTER</strong></p>
-                        <form>
-                            <input class="input" type="email" placeholder="Enter Your Email">
-                            <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                        
+                        {% for error in form.email.errors %}
+                        <span class="help-block">
+                            {{error}}</span>
+                        {% endfor   %}  
+                        
+                        <form method="post">
+                            {{ form.csrf_token }}
+                            <input  type="email" id = "email"  class="input" name="email" placeholder="Enter Your Email" value ="{{inputedEmail}}">
+                            <button type = "submit" id = "email" class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
                         </form>
+
                         <ul class="newsletter-follow">
                             <li>
                                 <a href="#"><i class="fa fa-facebook"></i></a>

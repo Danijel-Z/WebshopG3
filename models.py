@@ -39,6 +39,10 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
+class Newsletter(db.Model):
+    __tablename__= "Newsletters"
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
 
 
 class Category(db.Model):
@@ -78,6 +82,16 @@ def AddLoginIfNotExists(email:str, passwd:str, roles:list[str]):
     db.session.add(user)
     db.session.commit()
 
+def AddEmailIfNotExist(email:str):
+    if Newsletter.query.filter(Newsletter.email == email).first():
+        return
+    
+    newSubscriber = Newsletter()
+    newSubscriber.email = email
+    
+    db.session.add(newSubscriber)
+    db.session.commit()
+
 
 
 def seedData():
@@ -85,7 +99,7 @@ def seedData():
     AddRoleIfNotExists("Customer")
     AddLoginIfNotExists("admin@example.com", "Hejsan123#",["Admin"])
     AddLoginIfNotExists("customer@example.com", "Hejsan123#",["Customer"])
-
+    AddEmailIfNotExist("admin@example.com")
 
 
     addCat(db,  "Beverages",	"Soft drinks, coffees, teas, beers, and ales")        
