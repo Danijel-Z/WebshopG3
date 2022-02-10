@@ -1,3 +1,4 @@
+from distutils.log import debug
 from flask import Flask
 from models import  User, db, seedData, user_manager
 from flask_migrate import Migrate, upgrade
@@ -21,6 +22,6 @@ if __name__  == "__main__":
     with app.app_context():
         upgrade()
         seedData()
-    app.run()
+    app.run(debug=True)
 
 
