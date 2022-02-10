@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect,url_for
+from flask import Blueprint, render_template, flash, redirect,url_for, request
 from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts
 from models import db, Newsletter
 from .forms import NewsLetterForm
@@ -11,8 +11,9 @@ productBluePrint = Blueprint('product', __name__)
 
 @productBluePrint.route('/', methods = ["POST", "GET"])
 def index() -> str:
+    ##### Start Danijels kod #####
     form = NewsLetterForm()
-
+    
     if form.validate_on_submit():
         newSubscriber = Newsletter()
         newSubscriber.email = form.email.data
@@ -20,13 +21,17 @@ def index() -> str:
         db.session.commit()
 
         flash("Tack! Du är nu prenumenerat!")
-        return redirect(url_for("product.index", inputedEmail = form.email.data, form=form))
+        return redirect(url_for("product.index"))
     
+    inputedEmail = request.form.get("email", "")
+    ##### Slut av Danijels kod #####
+
     trendingCategories = []
     trendingCategories = getTrendingCategories()
     trendingProducts = getTrendingProducts()
-    return render_template('products/index.html',trendingCategories=trendingCategories,
-        products=trendingProducts, form= form, inputedEmail = form.email.data)
+
+    return render_template('products/index.html', trendingCategories=trendingCategories,
+        products=trendingProducts, form = form, inputedEmail = inputedEmail)
 
 
 @productBluePrint.route('/category/<id>')

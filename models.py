@@ -82,6 +82,16 @@ def AddLoginIfNotExists(email:str, passwd:str, roles:list[str]):
     db.session.add(user)
     db.session.commit()
 
+def AddEmailIfNotExist(email:str):
+    if Newsletter.query.filter(Newsletter.email == email).first():
+        return
+    
+    newSubscriber = Newsletter()
+    newSubscriber.email = email
+    
+    db.session.add(newSubscriber)
+    db.session.commit()
+
 
 
 def seedData():
@@ -89,7 +99,7 @@ def seedData():
     AddRoleIfNotExists("Customer")
     AddLoginIfNotExists("admin@example.com", "Hejsan123#",["Admin"])
     AddLoginIfNotExists("customer@example.com", "Hejsan123#",["Customer"])
-
+    AddEmailIfNotExist("admin@example.com")
 
 
     addCat(db,  "Beverages",	"Soft drinks, coffees, teas, beers, and ales")        
