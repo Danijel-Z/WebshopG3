@@ -420,6 +420,7 @@ textarea.input {
   display: inline-block;
   margin-right: 15px;
   font-size: 12px;
+  color: white;
 }
 
 .header-links li:last-child {

@@ -30,7 +30,19 @@
                     <li><a href="#"><i class="fa fa-map-marker"></i> Testgatan 122</a></li>
                 </ul>
                 <ul class="header-links pull-right">
+                    {% if current_user.email %}
+                    <li>Logged in as {{ current_user.email }}</li>
+                    {% else %}
+                    <li><a href="{{ url_for ('user.login')}}"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a></li>
                     <partial name="_LoginPartial" />
+                    {% endif %}
+                    
+                    {% if current_user.email %}
+                    <li><a class="dropdown-item" href="{{ url_for('user.logout') }}">Logout <i class="fas fa-sign-out-alt"></i></a></li>
+                    {% endif %}
+                    {% if not current_user.email %}
+                    <li><a class = "dropdownitem" href="{{ url_for('user.register') }}"">Register</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
