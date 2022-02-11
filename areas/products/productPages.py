@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect,url_for, request
-from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts
+from flask_login import current_user
+from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts,checkIfNewsletterSubscribed
 from models import db, Newsletter
 from .forms import NewsLetterForm
 
@@ -13,6 +14,7 @@ productBluePrint = Blueprint('product', __name__)
 def index() -> str:
     ##### Start Danijels kod #####
     form = NewsLetterForm()
+    NewsletterPage = True
     
     if form.validate_on_submit():
         newSubscriber = Newsletter()
@@ -24,6 +26,12 @@ def index() -> str:
         return redirect(url_for("product.index"))
     
     inputedEmail = request.form.get("email", "")
+    
+    if current_user.is_authenticated:
+        subscribed = checkIfNewsletterSubscribed(current_user.email)
+    else:
+        subscribed = False
+
     ##### Slut av Danijels kod #####
 
     trendingCategories = []
@@ -31,7 +39,7 @@ def index() -> str:
     trendingProducts = getTrendingProducts()
 
     return render_template('products/index.html', trendingCategories=trendingCategories,
-        products=trendingProducts, form = form, inputedEmail = inputedEmail)
+        products=trendingProducts, form = form, inputedEmail = inputedEmail, NewsletterPage= NewsletterPage, subscribed= subscribed)
 
 
 @productBluePrint.route('/category/<id>')

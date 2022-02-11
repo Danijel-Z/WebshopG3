@@ -1,4 +1,5 @@
-from models import Category, Product
+from sqlalchemy import false
+from models import Category, Newsletter, Product
 
 def getTrendingCategories():
     return Category.query.order_by(Category.CategoryID.desc()).paginate(1,4,False).items
@@ -11,3 +12,7 @@ def getProduct(id):
 
 def getTrendingProducts():
     return Product.query.order_by(Product.ProductID.desc()).paginate(1,8,False).items
+
+def checkIfNewsletterSubscribed(email:str)-> bool:
+    subscribed = Newsletter.query.filter(Newsletter.email == email).first()
+    return True if subscribed else False

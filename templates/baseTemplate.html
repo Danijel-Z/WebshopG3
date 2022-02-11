@@ -177,6 +177,10 @@
     </div>
     <!-- /SECTION -->
     <!-- NEWSLETTER -->
+    {% if NewsletterPage %}
+    {% if current_user.is_authenticated and subscribed %}
+    <div id="newsletter" class="section"></div>
+    {% else %}
     <div id="newsletter" class="section">
         <!-- container -->
         <div class="container">
@@ -186,12 +190,14 @@
                     <div class="newsletter">
                         <p>Sign Up for the <strong>NEWSLETTER</strong></p>
                         
+                        {% if form.errors%}
                         {% for error in form.email.errors %}
                         <span class="help-block">
                             {{error}}</span>
                         {% endfor   %}  
+                        {%endif%}
                         
-                        <form method="post">
+                        <form method="post" action="/">
                             {{ form.csrf_token }}
                             <input  type="email" id = "email"  class="input" name="email" placeholder="Enter Your Email" value ="{{inputedEmail}}">
                             <button type = "submit" id = "email" class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
@@ -218,6 +224,8 @@
         </div>
         <!-- /container -->
     </div>
+    {% endif %}
+    {% endif %}
     <!-- /NEWSLETTER -->
     <!-- FOOTER -->
     <footer id="footer">
