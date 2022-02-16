@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, redirect,url_for, request
 from flask_login import current_user
 from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts,checkIfNewsletterSubscribed
 from models import db, Newsletter
-from .forms import NewsLetterForm
+from forms import NewsLetterForm
 
 
 productBluePrint = Blueprint('product', __name__)

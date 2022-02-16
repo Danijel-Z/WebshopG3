@@ -1,4 +1,3 @@
-from sqlalchemy import false
 from models import Category, Newsletter, Product
 
 def getTrendingCategories():

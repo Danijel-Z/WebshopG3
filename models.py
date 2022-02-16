@@ -25,6 +25,18 @@ class User(db.Model, UserMixin):
 
     # Define the relationship to Role via UserRoles
     roles = db.relationship('Role', secondary='user_roles')
+    new_newsletters = db.relationship('CreateNewsletter', backref='User', lazy = True)
+
+class CreateNewsletter(db.Model):
+    __tablename__ = 'new_newsletters'
+    id = db.Column(db.Integer(), primary_key=True)
+    rubrik = db.Column(db.String(100), nullable = False, unique = False)
+    underRubrik = db.Column(db.String(100), nullable = False, unique = False , default = "")
+    innehall = db.Column(db.Text, nullable=False, unique = False)
+    datum_skapad = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+
 
 # Define the Role data-model
 class Role(db.Model):

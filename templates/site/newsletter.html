@@ -1,0 +1,27 @@
+{% extends "baseTemplate.html" %}
+{% block title %}Start{% endblock %}
+{% block maincontent %}
+
+
+
+<h1>Newsletters</h1>
+
+{% for newsletter in listWithNewsletters %}
+    <article class="media content-section">
+        <div class="media-body">
+
+            <div class="article-metadata">
+                {{ newsletter.User.email }}
+                <small class="text-muted">{{ newsletter.datum_skapad.strftime('%Y-%m-%d') }}</small>
+            </div>
+
+            <h2><a class="article-title" href="#">{{ newsletter.rubrik }}</a></h2>
+            <h4>{{ newsletter.underRubrik }}</h4>
+            <p class="article-content">{{ newsletter.innehall }}</p>
+
+        </div>
+    </article>
+{% endfor %}
+
+{% endblock %}
+

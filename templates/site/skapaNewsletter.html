@@ -1,0 +1,26 @@
+{% extends "baseTemplate.html" %}
+{% from '_formhelpers.html' import render_field %}
+{% block title %}Start{% endblock %}
+{% block maincontent %}
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-sm-4 grid-margin">
+
+            <form method="post">
+
+            {{ form.hidden_tag() }} 
+            
+            {{ render_field(form.rubrik) }} 
+            {{ render_field(form.underRubrik) }} 
+            {{ render_field(form.innehall) }} 
+            {{ render_field(form.submit) }}
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
