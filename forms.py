@@ -21,5 +21,5 @@ class SkapaNewsletterForm(FlaskForm):
     underRubrik = StringField("Underrubrik", validators = [Length(max=100, message= "Underrubriken får inte vara mer än 100 tecken.")])
     innehall = TextAreaField("Innehåll", validators=[DataRequired()])
     
-    submit = SubmitField("Skapa")
+    submit = SubmitField()
 
