@@ -1,4 +1,4 @@
-from models import Category, Newsletter, Product
+from models import Category, Subscriber, Product
 
 def getTrendingCategories():
     return Category.query.order_by(Category.CategoryID.desc()).paginate(1,4,False).items
@@ -13,5 +13,5 @@ def getTrendingProducts():
     return Product.query.order_by(Product.ProductID.desc()).paginate(1,8,False).items
 
 def checkIfNewsletterSubscribed(email:str)-> bool:
-    subscribed = Newsletter.query.filter(Newsletter.email == email).first()
+    subscribed = Subscriber.query.filter(Subscriber.email == email).first()
     return True if subscribed else False

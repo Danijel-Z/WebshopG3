@@ -1,16 +1,16 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import Email, DataRequired, ValidationError, Length
-from models import Newsletter
+from models import Subscriber
 
 
-class NewsLetterForm(FlaskForm):
+class SubscriberForm(FlaskForm):
     email = StringField("Newsletter", validators=[
                         Email(), DataRequired("Please enter an email.")])
 
     def validate_email(self, email):
-        findExistingSubscriber = Newsletter.query.filter(
-            Newsletter.email == email.data).first()
+        findExistingSubscriber = Subscriber.query.filter(
+            Subscriber.email == email.data).first()
 
         if findExistingSubscriber:
             raise ValidationError('Du är redan prenumerant.')

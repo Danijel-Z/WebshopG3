@@ -18,6 +18,14 @@
             <h2><a class="article-title" href="#">{{ newsletter.rubrik }}</a></h2>
             <h4>{{ newsletter.underRubrik }}</h4>
             <p class="article-content">{{ newsletter.innehall }}</p>
+            {% if newsletter.subscribers|length == 0 %}
+            <form method = post action="{{ url_for('site.send_newsletter', id = newsletter.id ) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="submit" value="Send to subscribers" class="">
+            </form>
+            {% else %}
+            <button class="">See subscribers</button>
+            {% endif %}
 
         </div>
     </article>
