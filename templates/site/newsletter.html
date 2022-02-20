@@ -1,30 +1,70 @@
 {% extends "baseTemplate.html" %}
 {% block title %}Start{% endblock %}
+{% block head%} 
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
+{% endblock %}
+
 {% block maincontent %}
 
 
 
-<h1>Newsletters</h1>
+<div class="align-items-center store">
+    <h1>Newsletters</h1>
+    <a class="button" href="{{url_for('site.skapa_newsletter')}}">Create New</a>
+</div>
 
-{% for newsletter in listWithNewsletters %}
-    <article class="media content-section">
+{% for index, newsletter in listWithNewsletters %}
+    <article class="breadcrumb">
         <div class="media-body">
 
             <div class="article-metadata">
                 {{ newsletter.User.email }}
                 <small class="text-muted">{{ newsletter.datum_skapad.strftime('%Y-%m-%d') }}</small>
+                
+                <form action="{{url_for('site.delete_newsletter', id = newsletter.id)}}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input title="Delete newsletter" type="submit" class="header-links pull-right" value="X">
+                </form>
+    
             </div>
 
             <h2><a class="article-title" href="#">{{ newsletter.rubrik }}</a></h2>
             <h4>{{ newsletter.underRubrik }}</h4>
             <p class="article-content">{{ newsletter.innehall }}</p>
             {% if newsletter.subscribers|length == 0 %}
-            <form method = post action="{{ url_for('site.send_newsletter', id = newsletter.id ) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <input type="submit" value="Send to subscribers" class="">
-            </form>
+            <div class="d-flex">
+                <form method = post action="{{ url_for('site.send_newsletter', id = newsletter.id ) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="submit" value="Send to subscribers" class="mr-1">
+                </form>
+                <button class="">Edit</button>
+            </div>
             {% else %}
-            <button class="">See subscribers</button>
+            <button title="Show Subscribers" class="modal-button" href="#myModal{{index}}"><i class="fa fa-users" href="#myModal{{index}}"></i></button>
+            <a href ="{{url_for('site.edit_newsletter', id = newsletter.id)}}"><button>Edit</button></a>
+            <!-- The Modal -->
+            <div id="myModal{{index}}" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <span class="close">&times;</span>
+                        <h2 class="modal-h2">Subscribers to "{{newsletter.rubrik}}"</h2>
+                    </div>
+
+                    <div class="modal-body">
+                        {% for subscriber in newsletter.subscribers %}
+                        <p>{{subscriber.email}}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="modal-footer"></div>
+
+                </div>
+            
+            </div>
+
             {% endif %}
 
         </div>
@@ -32,4 +72,9 @@
 {% endfor %}
 
 {% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename ='js/modal.js') }}"></script>
+{% endblock %} 
 

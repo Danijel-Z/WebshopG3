@@ -13,13 +13,24 @@ class SubscriberForm(FlaskForm):
             Subscriber.email == email.data).first()
 
         if findExistingSubscriber:
-            raise ValidationError('Du är redan prenumerant.')
+            raise ValidationError('You are already a subscriber.')
 
 class SkapaNewsletterForm(FlaskForm):
     
-    rubrik = StringField("Rubrik", validators=[DataRequired(), Length(max=100, message= "Rubriken får inte vara mer än 100 tecken.")])
-    underRubrik = StringField("Underrubrik", validators = [Length(max=100, message= "Underrubriken får inte vara mer än 100 tecken.")])
-    innehall = TextAreaField("Innehåll", validators=[DataRequired()])
+    rubrik = StringField("Title", validators=[DataRequired(), Length(max=100, message= "The title must not exceed 100 characters.")])
+    underRubrik = StringField("Subtitle", validators = [Length(max=100, message= "The subtitle must not exceed 100 characters.")])
+    innehall = TextAreaField("Content", validators=[DataRequired()])
     
-    submit = SubmitField()
+    submit = SubmitField("Create")
+
+class EditNewsletterForm(FlaskForm):
+    rubrik = StringField("Title", validators=[DataRequired(), Length(max=100, message= "The title must not exceed 100 characters.")])
+    underRubrik = StringField("Subtitle", validators = [Length(max=100, message= "The subtitle must not exceed 100 characters.")])
+    innehall = TextAreaField("Content", validators=[DataRequired()])
+    
+    submit = SubmitField("Save")
+
+
+
+
 
