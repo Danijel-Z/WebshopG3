@@ -56,7 +56,7 @@
                     <!-- LOGO -->
                     <div class="col-md-3">
                         <div class="header-logo">
-                            <a href="#" class="logo">
+                            <a href="{{ url_for ('product.index')}}" class="logo">
                                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
                             </a>
                         </div>
@@ -77,10 +77,16 @@
                         <div class="header-ctn">
                             <!-- Wishlist -->
                             <div>
-                                <a href="#">
+                                {%set wishtotal = namespace(value=0) %}
+                                    {%if session["wishlist"] is defined%}
+                                    {% for key, value in session["wishlist"].items()%}
+                                    {% set wishtotal.value = wishtotal.value + value.quantity%}
+                                    {%endfor%}
+                                    {%endif%}
+                                <a href="{{url_for('product.wishlist')}}">
                                     <i class="fa fa-heart-o"></i>
                                     <span>Your Wishlist</span>
-                                    <div class="qty">2</div>
+                                    <div class="qty">{{wishtotal.value}}</div>
                                 </a>
                             </div>
                             <!-- /Wishlist -->
@@ -89,39 +95,56 @@
                                 <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-shopping-cart"></i>
                                     <span>Your Cart</span>
-                                    <div class="qty">3</div>
+
+                                    {%set total = namespace(value=0) %}
+                                    {%if session["shoppingcart"] is defined%}
+                                    {% for key, value in session["shoppingcart"].items()%}
+                                    {% set total.value = total.value + value.quantity%}
+                                    {%endfor%}
+                                    {%endif%}
+                                    
+                                    <div class="qty">
+                                        {{total.value}}
+                                    
+                                    </div>
+                                    
                                 </a>
                                 <div class="cart-dropdown">
                                     <div class="cart-list">
+                                        {%set grandtotal = namespace(value=0) %}
+                                        {%if session["shoppingcart"] is defined%}
+                                        {% for key, product in session["shoppingcart"].items() %}
+                                        {%set grandtotal.value = grandtotal.value + (product.price|float * product.quantity|int) %}
                                         <div class="product-widget">
                                             <div class="product-img">
-                                                <img src="{{ url_for('static', filename='img/product01.png')}}" alt="">
+                                                <img src="{{product.image}}" alt="">
                                             </div>
                                             <div class="product-body">
-                                                <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                                <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                                <h3 class="product-name"><a href="#">{{product.name}}</a></h3>
+                                                <h4 class="product-price"><span class="qty">1x</span>${{product.price}}</h4>
                                             </div>
-                                            <button class="delete"><i class="fa fa-close"></i></button>
+                                            <form action="{{url_for('product.delete_item', id=key)}}", method="get">
+                                                <button class="delete"><i class="fa fa-close"></i></button>
+                                            </form>
                                         </div>
-
+                                        {%endfor%}
+                                        {%else%}
+                                        <h4>The cart is empty</h4>
+                                        {%endif%}
                                         <div class="product-widget">
-                                            <div class="product-img">
-                                                <img src="{{ url_for('static', filename='img/product02.png')}}" alt="">
-                                            </div>
-                                            <div class="product-body">
-                                                <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                                <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                            </div>
                                             <button class="delete"><i class="fa fa-close"></i></button>
                                         </div>
                                     </div>
                                     <div class="cart-summary">
-                                        <small>3 Item(s) selected</small>
-                                        <h5>SUBTOTAL: $2940.00</h5>
+                                        <small>{{total.value}} Item(s) selected</small>
+                                        <h4>TOTAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                            ${{grandtotal.value}}</h4>
                                     </div>
                                     <div class="cart-btns">
-                                        <a href="#">View Cart</a>
-                                        <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+                                        <a href="{{ url_for ('product.viewcart')}}">View Cart</a>
+                                        <a href="{{ url_for ('product.checkout')}}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -177,6 +200,10 @@
     </div>
     <!-- /SECTION -->
     <!-- NEWSLETTER -->
+    {% if NewsletterPage %}
+    {% if current_user.is_authenticated and subscribed %}
+    <div id="newsletter" class="section"></div>
+    {% else %}
     <div id="newsletter" class="section">
         <!-- container -->
         <div class="container">
@@ -185,11 +212,12 @@
                 <div class="col-md-12">
                     <div class="newsletter">
                         <p>Sign Up for the <strong>NEWSLETTER</strong></p>
-                        
+                        {%if form.errors%}
                         {% for error in form.email.errors %}
                         <span class="help-block">
                             {{error}}</span>
                         {% endfor   %}  
+                        {%endif%}
                         
                         <form method="post">
                             {{ form.csrf_token }}
@@ -218,6 +246,8 @@
         </div>
         <!-- /container -->
     </div>
+    {%endif%}
+    {%endif%}
     <!-- /NEWSLETTER -->
     <!-- FOOTER -->
     <footer id="footer">

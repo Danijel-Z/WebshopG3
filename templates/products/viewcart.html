@@ -1,0 +1,53 @@
+{% extends "baseTemplate.html" %}
+{% block title %}Start{% endblock %}
+{% block maincontent %}
+
+<table class="table">
+    <thead style="color: white; background-color: black;">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Image</th>
+        <th scope="col">product-name</th>
+        <th scope="col">product-price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">product-discount</th>
+        <th scope="col">Total</th>
+        <th scope="col">Update</th>
+        <th scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for key, product in cart.items() %}
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td><img src="{{product.image}}" width="25%"></td>
+        <td>{{product.name}}</td>
+        <form action= "{{url_for('product.update_cart', code=key)}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+        <td>{{product.price}}</td>
+        <td> <input type="number" name="quantity" min = "1" max = "10" value="{{product.quantity}}"></td>
+        <td>{{product.Discontinued}}</td>
+
+        {%set subtotal = product.quantity|int * product.price|float %}
+
+        <td>{{subtotal}}</td>
+        
+        <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+    </form>
+    <td><a href="{{url_for('product.delete_item', id=key)}}" class="btn-sm btn-danger">Remove</a></td>
+    
+      </tr>
+      {% endfor %}
+      <tr>
+
+        <td colspan="6" style="background-color: coral;"><a href="/"><h4>Continue shopping </h4> </a></td>
+        <td colspan="3" style="color: black;"><h4>{{grandtotal.value}}$</h4></td>
+        <td colspan="3" style="background-color: rgb(34, 190, 34);"><a href="{{url_for('product.checkout')}}"><h4> Checkout</h4></a></td>
+
+      </tr>
+      
+    </tbody>
+  </table>
+  
+
+{% endblock %}

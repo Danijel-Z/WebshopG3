@@ -1,0 +1,51 @@
+{% extends "baseTemplate.html" %}
+{% block title %}Start{% endblock %}
+{% block maincontent %}
+{%if wishcart|length == 0  %}
+ 
+<h4> There is nothing to show in your wishlist!</h4>
+
+{%else%}
+
+<table class="table">
+    <thead style="color: white; background-color: black;">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Image</th>
+        <th scope="col">product-name</th>
+        <th scope="col">product-price</th>
+        <th scope="col">product-discount</th>
+        <th scope="col">Total</th>
+        <th scope="col">add-to-cart</th>
+        <th scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for key, product in wishcart.items() %}
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td><img src="{{product.image}}" width="25%"></td>
+        <td>{{product.name}}</td>
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+        <td>{{product.price}}</td>
+        <td>{{product.Discontinued}}</td>
+
+        {%set subtotal = product.quantity|int * product.price|float %}
+
+        <td>{{subtotal}}</td>
+        
+        <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+    <td><a href="{{url_for('product.delete_wish_item', id=key)}}" class="btn-sm btn-danger">Remove</a></td>
+    
+      </tr>
+      {% endfor %}
+      <tr>
+
+        <td colspan="6" style="background-color: coral;"><a href="/"><h4>Continue shopping </h4> </a></td>
+      </tr>
+      
+    </tbody>
+  </table>
+{%endif%}
+
+{% endblock %}
