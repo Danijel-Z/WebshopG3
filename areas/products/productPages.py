@@ -1,7 +1,14 @@
+<<<<<<< HEAD
+from flask import Blueprint, render_template, flash, redirect,url_for, request, session
+from flask_login import current_user
+from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts, merge_dicts, checkIfNewsletterSubscribed, cart_grandtotal
+from models import db, Newsletter, Product
+=======
 from flask import Blueprint, render_template, flash, redirect,url_for, request
 from flask_login import current_user
 from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts,checkIfNewsletterSubscribed
 from models import db, Newsletter
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
 from .forms import NewsLetterForm
 
 
@@ -15,7 +22,10 @@ def index() -> str:
     ##### Start Danijels kod #####
     form = NewsLetterForm()
     NewsletterPage = True
+<<<<<<< HEAD
+=======
     
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
     if form.validate_on_submit():
         newSubscriber = Newsletter()
         newSubscriber.email = form.email.data
@@ -26,12 +36,23 @@ def index() -> str:
         return redirect(url_for("product.index"))
     
     inputedEmail = request.form.get("email", "")
+<<<<<<< HEAD
+    if current_user.is_authenticated:
+
+        subscribed = checkIfNewsletterSubscribed(current_user.email)
+
+    else:
+
+        subscribed = False
+    
+=======
     
     if current_user.is_authenticated:
         subscribed = checkIfNewsletterSubscribed(current_user.email)
     else:
         subscribed = False
 
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
     ##### Slut av Danijels kod #####
 
     trendingCategories = []
@@ -39,13 +60,18 @@ def index() -> str:
     trendingProducts = getTrendingProducts()
 
     return render_template('products/index.html', trendingCategories=trendingCategories,
+<<<<<<< HEAD
+        products=trendingProducts, form = form, inputedEmail = inputedEmail, NewsletterPage = NewsletterPage, subscribed=subscribed)
+=======
         products=trendingProducts, form = form, inputedEmail = inputedEmail, NewsletterPage= NewsletterPage, subscribed= subscribed)
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
 
 
 @productBluePrint.route('/category/<id>')
 def category(id) -> str:
     category = getCategory(id)
-    return render_template('products/category.html',category=category)
+    
+    return render_template('products/category.html',category=category )
 
 @productBluePrint.route('/product/<id>')
 def product(id) -> str:
@@ -53,5 +79,101 @@ def product(id) -> str:
     return render_template('products/product.html',product=product)
 
 
+@productBluePrint.route('/viewcart', methods=["GET"])
+def viewcart():
+    if "shoppingcart" not in session:
+        return redirect(request.referrer)
+    cart = session["shoppingcart"]
+    grandtotal = cart_grandtotal(cart)
+    return render_template('products/viewcart.html', cart = cart, grandtotal = grandtotal )
+
+@productBluePrint.route('/checkout', methods=["POST", "GET"])
+def checkout():
+    if "shoppingcart" not in session:
+        return redirect(request.referrer)
+    cart = session["shoppingcart"]
+    return render_template('products/checkout.html', cart = cart )
+
+@productBluePrint.route('/add_cart', methods=["POST", "GET"])
+def add_cart():
+    try:
+        product_id = request.args.get("id")
+        product = Product.query.get(product_id)
+        dict_items = {product_id:{"name":product.ProductName, "price": product.UnitPrice, 
+        "image":"https://picsum.photos/300/300?" + str(product.ProductID),"quantity":1,"discount":product.Discontinued}}
+        
+        if "shoppingcart" in session:
+            session["shoppingcart"] = merge_dicts(session["shoppingcart"],dict_items)
+            return redirect(request.referrer)
+        else:
+            session["shoppingcart"] = dict_items 
+            return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+@productBluePrint.route('/updatecart/<int:code>', methods=["POST"])
+def update_cart(code): 
+    if request.method =="POST":
+        quantity= request.form.get("quantity")
+        try: 
+            session.modified = True
+            for key, item in session["shoppingcart"].items():
+                if int(key) == code:
+                    item["quantity"] = int(quantity)
+                    return redirect(url_for("product.viewcart"))
+        except Exception as e:
+            print(e)
+            return redirect(url_for("product.viewcart"))
+
+@productBluePrint.route('/updatecart/<int:id>', methods=["POST","GET"])      
+def delete_item(id):
+    try:
+        session.modified = True
+        for key , item in session['shoppingcart'].items():
+            if int(key) == id:
+                session['shoppingcart'].pop(key, None)
+                return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('product.viewcart'))
 
 
+@productBluePrint.route('/wishlist', methods=["GET"])
+def wishlist():
+    if "wishlist" not in session:
+        return redirect(request.referrer)
+    wishcart = session["wishlist"]
+    return render_template('products/wishlist.html', wishcart = wishcart )
+
+@productBluePrint.route('/addwishlist', methods=["POST", "GET"])
+def addwishlist():
+    try:
+        product_id = request.args.get("id")
+        product = Product.query.get(product_id)
+        dict_items = {product_id:{"name":product.ProductName, "price": product.UnitPrice, 
+        "image":"https://picsum.photos/300/300?" + str(product.ProductID),"quantity":1,"discount":product.Discontinued}}
+        
+        if "wishlist" in session:
+            session["wishlist"] = merge_dicts(session["wishlist"],dict_items)
+            return redirect(request.referrer)
+        else:
+            session["wishlist"] = dict_items 
+            return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+@productBluePrint.route('/delete_wish/<int:id>', methods=["POST","GET"])      
+def delete_wish_item(id):
+    try:
+        session.modified = True
+        for key , item in session['wishlist'].items():
+            if int(key) == id:
+                session['wishlist'].pop(key, None)
+                return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+        return redirect(request.referrer)

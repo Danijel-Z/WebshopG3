@@ -31,6 +31,9 @@
                     {% for product in category.Products %}
 
                     <div class="product-box">
+                        
+                        <a href="{{url_for('product.addwishlist', id= product.ProductID)}}" class="btn"  ><span>+ Add to Wish List</span></a>
+
                         <div class="productcontainer">
                             <img src="https://picsum.photos/300/300?{{ product.ProductID }}" alt="cookies" class="hero-image"/>
             
@@ -43,10 +46,19 @@
             
                                 <div class="store">@Model.Color, @Model.Color</div>
             
-                                <a href="#" class="button">Purchase Product</a>
+                                <a href="{{url_for('product.add_cart', id = product.ProductID)}}" class="button">Purchase Product</a>
             
                             </div> <!-- end information -->
                         </div> <!-- end container -->
+                        
+                        {% if product.UnitsInStock > 50 %}
+                        <div><div class='box green'></div><h4>More than 50 products are avaible</h4></div>
+                        {% elif product.UnitsInStock <= 50 and product.UnitsInStock >= 20 %}
+                        <div><div class='box yellow'></div> <h4>20-50 products are left!</h4></div>
+                        {% elif product.UnitsInStock < 20 %}
+                        <div><div class='box red'></div><h4> &nbsp;&nbsp; {{product.UnitsInStock}} products are left!</h4></div>
+                        {%  endif  %}
+
                     </div>
                     
                                     <!-- /product -->
