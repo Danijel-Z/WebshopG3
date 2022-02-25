@@ -1,4 +1,4 @@
-from models import Category, Product, Newsletter
+from models import Category, Product, Subscriber
 
 def getTrendingCategories():
     return Category.query.order_by(Category.CategoryID.desc()).paginate(1,4,False).items
@@ -22,7 +22,7 @@ def merge_dicts(dict1,dict2):
                 return dict(list(dict1.items()) + list(dict2.items()))
 
 def checkIfNewsletterSubscribed(email:str)-> bool:
-    subscribed = Newsletter.query.filter(Newsletter.email == email).first()
+    subscribed = Subscriber.query.filter(Subscriber.email == email).first()
     return True if subscribed else False
 
 def cart_grandtotal(dict:dict):

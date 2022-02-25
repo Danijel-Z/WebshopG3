@@ -4,9 +4,6 @@ from flask_user import  UserMixin, UserManager
 from datetime import datetime
 
 db = SQLAlchemy()
-#hejsan
-#hej hej
-#testar lägga in kommentar
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +22,7 @@ class User(db.Model, UserMixin):
 
     # Define the relationship to Role via UserRoles
     roles = db.relationship('Role', secondary='user_roles')
+    newsletters = db.relationship('Newsletter', backref='User', lazy = True)
 
 # Define the Role data-model
 class Role(db.Model):
@@ -39,10 +37,35 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
-class Newsletter(db.Model):
-    __tablename__= "Newsletters"
+
+class Subscriber(db.Model):
+    __tablename__= "Subscribers"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
+
+    newsletters = db.relationship('Newsletter', secondary='subscriber_newsletters', backref= 'subscribers')
+
+    def __repr__(self):
+        return f'<Subscriber: {self.email}>'
+
+class Newsletter(db.Model):
+    __tablename__ = 'Newsletters'
+    id = db.Column(db.Integer(), primary_key=True)
+    rubrik = db.Column(db.String(100), nullable = False, unique = False)
+    underRubrik = db.Column(db.String(100), nullable = False, unique = False , default = "")
+    innehall = db.Column(db.Text, nullable=False, unique = False)
+    datum_skapad = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+
+    def __repr__(self):
+        return f'<Newsletter: {self.rubrik}>'
+
+class SubscriberNewsletters(db.Model):
+    __tablename__ = 'subscriber_newsletters'
+    id = db.Column(db.Integer(), primary_key=True)
+    subscriber_id = db.Column(db.Integer(), db.ForeignKey('Subscribers.id', ondelete='CASCADE'))
+    newsletter_id = db.Column(db.Integer(), db.ForeignKey('Newsletters.id', ondelete='CASCADE'))
 
 
 class Category(db.Model):
@@ -82,14 +105,26 @@ def AddLoginIfNotExists(email:str, passwd:str, roles:list[str]):
     db.session.add(user)
     db.session.commit()
 
-def AddEmailIfNotExist(email:str):
-    if Newsletter.query.filter(Newsletter.email == email).first():
+def AddSubscriberIfNotExist(email:str):
+    if Subscriber.query.filter(Subscriber.email == email).first():
         return
     
-    newSubscriber = Newsletter()
+    newSubscriber = Subscriber()
     newSubscriber.email = email
     
     db.session.add(newSubscriber)
+    db.session.commit()
+
+def AddNewslettersIfNotExist(newsletter:Newsletter):
+
+    if len(newsletter) != 0:
+        return
+    
+    newsletterOne = Newsletter(rubrik = "Keep it cool", underRubrik = "Tide Coldwater", innehall = "Tide coldwater is a specially formulated detergent that provides a deep clean in cold temperatures.")
+    newsletterTwo = Newsletter(rubrik = "Avocado Oil Powder", underRubrik = "100% Natural Cosmetics", innehall = "in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum")
+    newsletterThree = Newsletter(rubrik = "Beverages", underRubrik = "Buy 2 for price of 1", innehall = "Soft drinks, coffees, teas, beers, and ales")
+
+    db.session.add_all( [newsletterOne, newsletterTwo, newsletterThree] )
     db.session.commit()
 
 
@@ -99,7 +134,8 @@ def seedData():
     AddRoleIfNotExists("Customer")
     AddLoginIfNotExists("admin@example.com", "Hejsan123#",["Admin"])
     AddLoginIfNotExists("customer@example.com", "Hejsan123#",["Customer"])
-    AddEmailIfNotExist("admin@example.com")
+    AddSubscriberIfNotExist("admin@example.com")
+    AddNewslettersIfNotExist(Newsletter.query.all())
 
 
     addCat(db,  "Beverages",	"Soft drinks, coffees, teas, beers, and ales")        

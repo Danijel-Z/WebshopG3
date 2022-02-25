@@ -2319,3 +2319,19 @@ textarea.input {
 .yellow {
   background-color: yellow;
 }
+
+.align-items-center{
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.d-flex{
+  display:flex;
+}
+
+.mr-1{
+  margin-right:4px;
+}

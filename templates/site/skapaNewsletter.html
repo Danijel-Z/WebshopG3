@@ -1,0 +1,33 @@
+{% extends "baseTemplate.html" %}
+{% from '_formhelpers.html' import render_field %}
+{% block title %}Start{% endblock %}
+{% block maincontent %}
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-sm-4 grid-margin">
+
+            <form method="post">
+
+            {{ form.hidden_tag() }} 
+            
+            {{ render_field(form.rubrik) }} 
+            {{ render_field(form.underRubrik) }} 
+            {{ render_field(form.innehall) }} 
+            
+            <div class="form-group">
+                {{ form.submit(class="form-control")  }}  
+            </div>
+
+            <div class="form-group">
+                <a href="{{url_for('site.newsletter')}}">Cancel</a> 
+            </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
