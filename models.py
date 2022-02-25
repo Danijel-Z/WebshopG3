@@ -108,7 +108,7 @@ def AddLoginIfNotExists(email:str, passwd:str, roles:list[str]):
     db.session.add(user)
     db.session.commit()
 
-def AddEmailIfNotExist(email:str):
+def AddSubscriberIfNotExist(email:str):
     if Subscriber.query.filter(Subscriber.email == email).first():
         return
     
@@ -118,6 +118,18 @@ def AddEmailIfNotExist(email:str):
     db.session.add(newSubscriber)
     db.session.commit()
 
+def AddNewslettersIfNotExist(newsletter:Newsletter):
+
+    if len(newsletter) != 0:
+        return
+    
+    newsletterOne = Newsletter(rubrik = "Keep it cool", underRubrik = "Tide Coldwater", innehall = "Tide coldwater is a specially formulated detergent that provides a deep clean in cold temperatures.")
+    newsletterTwo = Newsletter(rubrik = "Avocado Oil Powder", underRubrik = "100% Natural Cosmetics", innehall = "in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum")
+    newsletterThree = Newsletter(rubrik = "Beverages", underRubrik = "Buy 2 for price of 1", innehall = "Soft drinks, coffees, teas, beers, and ales")
+
+    db.session.add_all( [newsletterOne, newsletterTwo, newsletterThree] )
+    db.session.commit()
+
 
 
 def seedData():
@@ -125,7 +137,8 @@ def seedData():
     AddRoleIfNotExists("Customer")
     AddLoginIfNotExists("admin@example.com", "Hejsan123#",["Admin"])
     AddLoginIfNotExists("customer@example.com", "Hejsan123#",["Customer"])
-    AddEmailIfNotExist("admin@example.com")
+    AddSubscriberIfNotExist("admin@example.com")
+    AddNewslettersIfNotExist(Newsletter.query.all())
 
 
     addCat(db,  "Beverages",	"Soft drinks, coffees, teas, beers, and ales")        
