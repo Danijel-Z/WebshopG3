@@ -218,8 +218,8 @@
                         {% for error in form.email.errors %}
                         <span class="help-block">
                             {{error}}</span>
-                        {% endfor   %}  
-                        {%endif%}
+                        {% endfor %}  
+                        {% endif %}
                         
                         <form method="post" action="/">
                             {{ form.csrf_token }}
