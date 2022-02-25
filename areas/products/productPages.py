@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 from flask import Blueprint, render_template, flash, redirect,url_for, request, session
 from flask_login import current_user
 from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts, merge_dicts, checkIfNewsletterSubscribed, cart_grandtotal
 from models import db, Newsletter, Product
+=======
+from flask import Blueprint, render_template, flash, redirect,url_for, request
+from flask_login import current_user
+from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts,checkIfNewsletterSubscribed
+from models import db, Newsletter
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
 from .forms import NewsLetterForm
 
 
@@ -15,6 +22,10 @@ def index() -> str:
     ##### Start Danijels kod #####
     form = NewsLetterForm()
     NewsletterPage = True
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
     if form.validate_on_submit():
         newSubscriber = Newsletter()
         newSubscriber.email = form.email.data
@@ -25,6 +36,7 @@ def index() -> str:
         return redirect(url_for("product.index"))
     
     inputedEmail = request.form.get("email", "")
+<<<<<<< HEAD
     if current_user.is_authenticated:
 
         subscribed = checkIfNewsletterSubscribed(current_user.email)
@@ -33,6 +45,14 @@ def index() -> str:
 
         subscribed = False
     
+=======
+    
+    if current_user.is_authenticated:
+        subscribed = checkIfNewsletterSubscribed(current_user.email)
+    else:
+        subscribed = False
+
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
     ##### Slut av Danijels kod #####
 
     trendingCategories = []
@@ -40,7 +60,11 @@ def index() -> str:
     trendingProducts = getTrendingProducts()
 
     return render_template('products/index.html', trendingCategories=trendingCategories,
+<<<<<<< HEAD
         products=trendingProducts, form = form, inputedEmail = inputedEmail, NewsletterPage = NewsletterPage, subscribed=subscribed)
+=======
+        products=trendingProducts, form = form, inputedEmail = inputedEmail, NewsletterPage= NewsletterPage, subscribed= subscribed)
+>>>>>>> 19bf5d01c1e7ffed3ecdd4fddcc263372a5242a5
 
 
 @productBluePrint.route('/category/<id>')

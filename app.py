@@ -1,4 +1,3 @@
-from distutils.log import debug
 from flask import Flask
 from models import  User, db, seedData, user_manager
 from flask_migrate import Migrate, upgrade
