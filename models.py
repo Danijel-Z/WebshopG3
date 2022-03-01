@@ -145,7 +145,7 @@ def seedData():
     addCat(db, "Grains/Cereals","Breads, crackers, pasta, and cereal")        
     addCat(db, "Meat/Poultry","Prepared meats")        
     addCat(db, "Produce","Dried fruit and bean curd")        
-    addCat(db, "Seafood","Seaweed and fish")        
+    addCat(db, "Seafood","Seaweed and fish")     
     addProduct(db,"Chai",	1,1	,"10 boxes x 20 bags",	18.0000	,	39	,	0	,	10	,	0	)
     addProduct(db,"Chang",	1,1	,"24 - 12 oz bottles",	19.0000	,	17	,	40	,	25	,	0	)
     addProduct(db,"Aniseed Syrup",	1,2	,"12 - 550 ml bottles",	10.0000	,	13	,	70	,	25	,	0	)

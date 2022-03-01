@@ -47,11 +47,11 @@
                     {% for product in products %}
 
                     <div class="product-box">
-                        <a href="{{url_for('product.addwishlist', id= product.ProductID)}}" class="btn"  ><span>+ Add to Wish List</span></a>
+                        <a href="{{url_for('product.addwishlist', id= product.ProductID, changedCategoryName = False, CategoryName = product.Category.CategoryName )}}" class="btn"  ><span>+ Add to Wish List</span></a>
                         <div class="productcontainer">
-                            <img src="https://picsum.photos/300/300?{{ product.ProductID }}" alt="cookies" class="hero-image"/>
+                            <img src="../../static/img/{{product.Category.CategoryName}}/{{product.Category.CategoryName}}{{product.ProductID}}.jpg" alt="cookies" class="hero-image"/>
             
-                            <div class="price">$
+                            <div class="price">
                                 <div>{{ product.UnitPrice }}</div></div>
             
                             <div class="information">
@@ -60,7 +60,7 @@
             
                                 <div class="store">@Model.Color, @Model.Color</div>
             
-                                <a href="{{url_for('product.add_cart', id= product.ProductID)}}" class="button">Purchase Product</a>
+                                <a href="{{url_for('product.add_cart', id= product.ProductID, changedCategoryName = False, CategoryName = product.Category.CategoryName )}}" class="button">Purchase Product</a>
                                                                 
             
                             </div> <!-- end information -->

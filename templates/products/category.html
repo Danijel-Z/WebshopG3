@@ -32,11 +32,15 @@
 
                     <div class="product-box">
                         
-                        <a href="{{url_for('product.addwishlist', id= product.ProductID)}}" class="btn"  ><span>+ Add to Wish List</span></a>
+                        <a href="{{url_for('product.addwishlist', id= product.ProductID, changedCategoryName = changedCategoryName, CategoryName = category.CategoryName)}}" class="btn"  ><span>+ Add to Wish List</span></a>
 
                         <div class="productcontainer">
-                            <img src="https://picsum.photos/300/300?{{ product.ProductID }}" alt="cookies" class="hero-image"/>
-            
+                            {% if changedCategoryName %}
+                            <img src="../../static/img/{{ newCategoryName }}/{{ newCategoryName }}{{ product.ProductID }}.jpg" alt="cookies" class="hero-image"/>
+
+                            {% else %}
+                            <img src="../../static/img/{{ category.CategoryName }}/{{ category.CategoryName }}{{ product.ProductID }}.jpg" alt="cookies" class="hero-image"/>
+                            {% endif %}
                             <div class="price">$
                                 <div>{{ product.UnitPrice }}</div></div>
             
@@ -46,7 +50,7 @@
             
                                 <div class="store">@Model.Color, @Model.Color</div>
             
-                                <a href="{{url_for('product.add_cart', id = product.ProductID)}}" class="button">Purchase Product</a>
+                                <a href="{{url_for('product.add_cart', id = product.ProductID, changedCategoryName = changedCategoryName, CategoryName = category.CategoryName)}}" class="button">Purchase Product</a>
             
                             </div> <!-- end information -->
                         </div> <!-- end container -->

@@ -10,7 +10,9 @@ def getProduct(id):
     return Product.query.filter(Product.ProductID ==id).first()
 
 def getTrendingProducts():
-    return Product.query.order_by(Product.ProductID.desc()).paginate(1,8,False).items
+    category = Category.query.filter(Category.CategoryName == "Beverages").first()
+    products = category.Products
+    return products
 
 def merge_dicts(dict1,dict2):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
@@ -31,3 +33,13 @@ def cart_grandtotal(dict:dict):
         subtotal = float(product["price"]) * int(product["quantity"])
         grandtotal = grandtotal + subtotal
     return grandtotal
+
+def getBildURL(changedCategoryName:bool, CategoryName:str, Product_Id:int) -> str:
+    if changedCategoryName == True:
+        NewCategoryName = CategoryName.replace( "/" , "-")
+        url = "../../static/img/" + str(NewCategoryName) + "/" + str(NewCategoryName) + str(Product_Id) + ".jpg"
+        return url
+    
+    else:
+        url = "../../static/img/" + str(CategoryName) + "/" + str(CategoryName) + str(Product_Id) + ".jpg"
+        return url

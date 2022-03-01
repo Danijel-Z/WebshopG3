@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect,url_for, request, session
 from flask_login import current_user
-from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts, merge_dicts, checkIfNewsletterSubscribed, cart_grandtotal
+from .services import getCategory, getTrendingCategories, getProduct, getTrendingProducts, merge_dicts, checkIfNewsletterSubscribed, cart_grandtotal, getBildURL
 from models import db, Subscriber, Product
 from forms import SubscriberForm
 
@@ -45,8 +45,14 @@ def index() -> str:
 @productBluePrint.route('/category/<id>')
 def category(id) -> str:
     category = getCategory(id)
+    changedCategoryName = False
+    newCategoryName = False
+
+    if "/" in category.CategoryName:
+        newCategoryName = category.CategoryName.replace("/", "-")
+        changedCategoryName = True
     
-    return render_template('products/category.html',category=category )
+    return render_template('products/category.html', category=category, changedCategoryName = changedCategoryName, newCategoryName = newCategoryName)
 
 @productBluePrint.route('/product/<id>')
 def product(id) -> str:
@@ -74,8 +80,13 @@ def add_cart():
     try:
         product_id = request.args.get("id")
         product = Product.query.get(product_id)
+        changedCategoryName = request.args.get("changedCategoryName")
+        CategoryName = request.args.get("CategoryName")
+
+        BildURL = getBildURL(bool(changedCategoryName), CategoryName, product_id )
+
         dict_items = {product_id:{"name":product.ProductName, "price": product.UnitPrice, 
-        "image":"https://picsum.photos/300/300?" + str(product.ProductID),"quantity":1,"discount":product.Discontinued}}
+        "image": BildURL ,"quantity":1,"discount":product.Discontinued}}
         
         if "shoppingcart" in session:
             session["shoppingcart"] = merge_dicts(session["shoppingcart"],dict_items)
@@ -127,8 +138,14 @@ def addwishlist():
     try:
         product_id = request.args.get("id")
         product = Product.query.get(product_id)
+
+        changedCategoryName = request.args.get("changedCategoryName")
+        CategoryName = request.args.get("CategoryName")
+
+        BildURL = getBildURL(bool(changedCategoryName), CategoryName, product_id)
+
         dict_items = {product_id:{"name":product.ProductName, "price": product.UnitPrice, 
-        "image":"https://picsum.photos/300/300?" + str(product.ProductID),"quantity":1,"discount":product.Discontinued}}
+        "image": BildURL ,"quantity":1,"discount":product.Discontinued}}
         
         if "wishlist" in session:
             session["wishlist"] = merge_dicts(session["wishlist"],dict_items)
